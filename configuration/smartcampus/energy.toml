@@ -1,0 +1,15 @@
+[collectors]
+
+[collectors.sensors]
+PATH="smartcampus.energy.collectors.energy.EnergyCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "5m"
+
+[handlers]
+
+[handlers.sensors]
+PATH = "smartcampus.energy.handlers.energy.EnergyHandler"
+DATA_FORMAT = "geojson"
+DATA_TYPE  = "json"
+QUERY_PARAMETERS  = {}
