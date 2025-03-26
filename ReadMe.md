@@ -1,5 +1,6 @@
 <img src="https://avatars.githubusercontent.com/u/125973400?s=150&v=4" alt="Logo de MobilityTwin.Brussels" height=150>
-Fari digital twin backend. Based on (Components)[https://github.com/AITwin/Components]. Credit due to original creators
+Fari digital twin backend. Based on [Components](https://github.com/AITwin/Components). Credit due to original creators
+
 # Components
 
 ## Overview
