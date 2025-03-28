@@ -3,7 +3,16 @@
 [collectors.sensors]
 
 PATH = "sensor_community.collectors.sensors.SensorCommunityCollector"
-DATA_FORMAT = "json"
+DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
 SCHEDULE = "5m"
+
+[handlers]
+
+[handlers.sensors]
+
+PATH = "sensor_community.handlers.sensors.SensorCommunityHandler"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+QUERY_PARAMETERS = { start_timestamp = "int", end_timestamp = "int" }
 

@@ -55,7 +55,6 @@ def launch_collectors(args, config, processes, tables):
         processes (list): List to append the created processes.
         tables (dict): Tables from the database synchronization.
     """
-    print(config.collectors.keys())
     collector_names_to_run = (
         config.collectors.keys() if "all" in args.collectors else args.collectors
     )
