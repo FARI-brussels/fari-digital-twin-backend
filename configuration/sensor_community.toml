@@ -1,0 +1,9 @@
+[collectors]
+
+[collectors.sensors]
+
+PATH = "sensor_community.collectors.sensors.SensorCommunityCollector"
+DATA_FORMAT = "json"
+DATA_TYPE = "json"
+SCHEDULE = "5m"
+
