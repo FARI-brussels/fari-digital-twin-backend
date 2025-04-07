@@ -1,0 +1,18 @@
+[collectors]
+
+[collectors.network]
+
+PATH = "opensky.collectors.network.OpenSkyCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "5m"
+
+[handlers]
+
+[handlers.network]
+
+PATH = "opensky.handlers.network.OpenSkyHandler"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+QUERY_PARAMETERS = { start_timestamp = "int", end_timestamp = "int" }
+
