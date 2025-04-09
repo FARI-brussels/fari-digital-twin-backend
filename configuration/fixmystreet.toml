@@ -1,0 +1,12 @@
+[collectors]
+
+[collectors.incidents]
+
+PATH = "fixmystreet.collectors.fixmystreet_incidents.FixMyStreetIncidentsCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "5m"
+
+#[harvesters]
+
+#[haversters.history]
