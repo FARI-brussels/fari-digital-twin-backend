@@ -1,0 +1,7 @@
+[collectors]
+
+[collectors.site]
+PATH = "construction_site.sibelga.collectors.site.SibelgaSiteCollector"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+SCHEDULE = "1h"
