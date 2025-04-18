@@ -62,7 +62,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             return
 
         # Extract handler name from path (split at query parameters)
-        handler_name = self.path[1:]
+        handler_name = self.path[1:].replace("/", "_")
         query_parameters_string = None
 
         if "?" in handler_name:

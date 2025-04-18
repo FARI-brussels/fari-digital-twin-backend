@@ -1,0 +1,15 @@
+[collectors]
+
+[collectors.tilesets]
+
+PATH = "pointcloud.collectors.tilesets.TiledPointCloudCollector"
+DATA_FORMAT = "tileset"
+DATA_TYPE = "json"
+SCHEDULE = "05:00"
+
+[handlers]
+[handlers.tilesets]
+PATH = "pointcloud.handlers.tilesets.TiledPointCloudHandler"
+DATA_FORMAT = "tileset"
+DATA_TYPE = "json"
+QUERY_PARAMETERS = { start_timestamp = "int", end_timestamp = "int" }

@@ -1,5 +1,7 @@
 import abc
+import json
 import os
+from typing import Union
 
 from azure.storage.blob import BlobServiceClient
 
@@ -69,12 +71,12 @@ class FileStorageManager(StorageManager):
     def __init__(self, directory):
         self.directory = directory
 
-    def write(self, file_name: str, data: bytes) -> str:
+    def write(self, file_name: str, data: Union[bytes, dict, list]) -> str:
         """
         Write data to a file in the local file system.
 
         :param file_name: Name of the file to create or update.
-        :param data: Data to write to the file. Can be a string or bytes.
+        :param data: Data to write to the file. Can be bytes, dict, or list (for JSON).
 
         :return: Path of the file.
         """
@@ -82,8 +84,14 @@ class FileStorageManager(StorageManager):
         # create directory if it does not exist
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
-        with open(file_path, "wb") as file:
-            file.write(data)
+        if isinstance(data, (dict, list)):
+            # Handle JSON data
+            with open(file_path, "w", encoding="utf-8") as file:
+                json.dump(data, file, indent=2)
+        else:
+            # Handle binary data
+            with open(file_path, "wb") as file:
+                file.write(data)
 
         return file_path
 
