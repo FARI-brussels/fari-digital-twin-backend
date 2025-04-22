@@ -1,0 +1,15 @@
+[collectors]
+
+[collectors.tilesets]
+
+PATH = "bim.collectors.tilesets.TiledBimCollector"
+DATA_FORMAT = "tileset"
+DATA_TYPE = "json"
+SCHEDULE = "05:00"
+
+[handlers]
+[handlers.tilesets]
+PATH = "bim.handlers.tilesets.TiledBimHandler"
+DATA_FORMAT = "tileset"
+DATA_TYPE = "json"
+QUERY_PARAMETERS = { start_timestamp = "int", end_timestamp = "int" }

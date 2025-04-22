@@ -54,6 +54,7 @@ class AzureBlobManager(StorageManager):
 class OVHBlobManager(StorageManager):
     def __init__(self, endpoint_url, access_key, secret_key, bucket_name):
         self.bucket_name = bucket_name
+        self.endpoint_url = endpoint_url
         self.s3 = boto3.client(
             's3',
             endpoint_url=endpoint_url,
@@ -65,17 +66,58 @@ class OVHBlobManager(StorageManager):
                 response_checksum_validation="when_required"
             ),
         )
-
-    def write(self, file_name: str, data: bytes) -> str:
-        self.s3.put_object(Bucket=self.bucket_name, Key=file_name, Body=data)
-        return f"{self.s3.meta.endpoint_url}/{self.bucket_name}/{file_name}"
-
+    
+    def write(self, file_name: str, data: Union[bytes, str]) -> str:
+        self.s3.put_object(Bucket=self.bucket_name, Key=file_name, Body=data, ACL='public-read')
+        endpoint_base = self.endpoint_url.split('://')[-1]
+        formatted_url = f"https://{self.bucket_name}.{endpoint_base}{file_name}"
+        return formatted_url
+    
     def read(self, file_name: str) -> bytes:
         response = self.s3.get_object(Bucket=self.bucket_name, Key=file_name)
         return response['Body'].read()
-
+    
     def delete(self, file_name: str):
         self.s3.delete_object(Bucket=self.bucket_name, Key=file_name)
+    
+    def configure_cors(self, allowed_origins=None, allowed_methods=None, allowed_headers=None, max_age_seconds=3000):
+        """
+        Configure CORS settings for the bucket.
+        
+        Args:
+            allowed_origins (list): List of allowed origins, e.g. ['https://www.itowns-project.org']
+            allowed_methods (list): List of allowed HTTP methods, e.g. ['GET', 'HEAD']
+            allowed_headers (list): List of allowed headers, e.g. ['*']
+            max_age_seconds (int): Maximum age in seconds for the browser to cache CORS response
+        """
+        if allowed_origins is None:
+            allowed_origins = ['*']  # Allow all origins by default
+        
+        if allowed_methods is None:
+            allowed_methods = ['GET', 'HEAD']  # Common read methods
+        
+        if allowed_headers is None:
+            allowed_headers = ['*']  # Allow all headers
+        
+        cors_configuration = {
+            'CORSRules': [{
+                'AllowedOrigins': allowed_origins,
+                'AllowedMethods': allowed_methods,
+                'AllowedHeaders': allowed_headers,
+                'ExposeHeaders': ['ETag', 'Content-Length'],
+                'MaxAgeSeconds': max_age_seconds
+            }]
+        }
+        
+        try:
+            self.s3.put_bucket_cors(
+                Bucket=self.bucket_name,
+                CORSConfiguration=cors_configuration
+            )
+            return True
+        except Exception as e:
+            print(f"Error configuring CORS: {e}")
+            return False
 
 
 class FileStorageManager(StorageManager):
@@ -126,6 +168,12 @@ elif "OVH_ENDPOINT_URL" in os.environ:
         access_key=os.environ["OVH_ACCESS_KEY"],
         secret_key=os.environ["OVH_SECRET_KEY"],
         bucket_name=os.environ["OVH_BUCKET_NAME"],
+    )
+    # Configure CORS for itowns-project.org
+    storage_manager.configure_cors(
+        allowed_origins=['*'],
+        allowed_methods=['GET', 'HEAD'],
+        allowed_headers=['*'],
     )
 
 else:

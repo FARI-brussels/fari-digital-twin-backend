@@ -11,6 +11,7 @@ from pathlib import Path
 from datetime import datetime
 import threading
 import time
+import zipfile  # Added for zip inspection
 
 # Create the FastAPI application
 app = FastAPI(title="ZIP Upload Server")
@@ -27,6 +28,36 @@ PORT = 8887
 
 # Path for the latest tileset
 LATEST_TILESET_PATH = TEMP_DIR / "tileset.zip"
+
+def inspect_zip_content(zip_path):
+    """
+    Inspect the ZIP file content to check if it contains .ptns files or .glb files.
+    Returns: "bim" if .glb files are found, "pointcloud" if .pnts files are found, 
+    or "unknown" if neither is found.
+    """
+    try:
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            file_list = zip_ref.namelist()
+            
+            # Convert all filenames to lowercase for case-insensitive matching
+            file_list_lower = [f.lower() for f in file_list]
+            
+            # Check if any .ptns files exist (pointcloud)
+            has_ptns = any(filename.endswith('.pnts') for filename in file_list_lower)
+            
+            # Check if any .glb files exist (BIM)
+            has_glb = any(filename.endswith('.glb') for filename in file_list_lower)
+            
+            # Determine the type based on file extensions
+            if has_glb:
+                return "bim"
+            elif has_ptns:
+                return "pointcloud"
+            else:
+                return "unknown"
+    except Exception as e:
+        print(f"Error inspecting ZIP file: {e}")
+        return "unknown"
 
 @app.get("/", response_class=HTMLResponse)
 async def get_upload_form():
@@ -61,16 +92,24 @@ async def upload_zip_file(zipfile: UploadFile = File(...)):
     # Copy the file
     shutil.copy2(filepath, LATEST_TILESET_PATH)
     
+    # Inspect the ZIP content to determine what type of model it contains
+    content_type = inspect_zip_content(filepath)
+    
+    # Determine which collector to run based on content
+    if content_type == "bim":
+        collector_command = "python main.py --collectors bim_tilesets --now"
+    else:
+        # Default to pointcloud_tilesets for pointcloud or unknown types
+        collector_command = "python main.py --collectors pointcloud_tilesets --now"
     # Launch the command in a separate thread
     launch_thread = threading.Thread(
         target=run_command,
-        args=("python main.py --collectors pointcloud_tilesets --now",)
+        args=(collector_command,)
     )
     launch_thread.daemon = True
     launch_thread.start()
-    
-    # Redirect to a success page
-    return HTMLResponse(content=get_success_html(filename))
+    # Redirect to a success page with content type info
+    return HTMLResponse(content=get_success_html(filename, content_type, collector_command))
 
 @app.get("/tileset.zip")
 async def serve_latest_zip():
@@ -228,7 +267,7 @@ def get_html_template():
             <p>Once uploaded, your ZIP file will be available at:</p>
             <p><strong>http://localhost:{PORT}/tileset.zip</strong></p>
             <p>This URL will always point to your most recently uploaded ZIP file.</p>
-            <p>After upload, the system will automatically run the processing command.</p>
+            <p>After upload, the system will automatically detect the content type (BIM or pointcloud) and run the appropriate processing command.</p>
         </div>
         
         <script>
@@ -287,8 +326,16 @@ def get_html_template():
     </html>
     """
 
-def get_success_html(filename):
+def get_success_html(filename, content_type, command):
     """Return the HTML template for the success page."""
+    # Determine content type text for display
+    if content_type == "bim":
+        content_type_text = "Building Information Model (BIM)"
+    elif content_type == "pointcloud":
+        content_type_text = "Point Cloud"
+    else:
+        content_type_text = "Unknown (processed as Point Cloud)"
+    
     return f"""
     <!DOCTYPE html>
     <html>
@@ -364,6 +411,13 @@ def get_success_html(filename):
                 margin-top: 20px;
                 border-left: 3px solid #ffc107;
             }}
+            .content-type {{
+                background-color: #e8eaf6;
+                padding: 15px;
+                border-radius: 4px;
+                margin-top: 20px;
+                border-left: 3px solid #3f51b5;
+            }}
         </style>
     </head>
     <body>
@@ -379,8 +433,12 @@ def get_success_html(filename):
             <p><strong>Stored as:</strong> Temporary file in system temp directory</p>
         </div>
         
+        <div class="content-type">
+            <p><strong>Detected Content Type:</strong> {content_type_text}</p>
+        </div>
+        
         <div class="processing">
-            <p><strong>Processing:</strong> The command <code>python main.py --collectors pointcloud_tilesets --now</code> has been launched.</p>
+            <p><strong>Processing:</strong> The command <code>{command}</code> has been launched.</p>
         </div>
         
         <div class="link-container">

@@ -64,7 +64,6 @@ def write_tileset_result(configuration: ComponentConfiguration, table: Table, da
                 continue
             if "tileset" in file_path:
                 md5_digest = hashlib.md5(content.encode("utf-8")).hexdigest()
-                content = json.loads(content)
                 tileset_url = storage_manager.write(
                 f"{configuration.name}/{date.strftime('%Y-%m-%d_%H-%M-%S')}/{file_path}",
                 content)
