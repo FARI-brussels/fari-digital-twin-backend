@@ -16,3 +16,14 @@ DATA_TYPE = "json"
 SOURCE = "fixmystreet.incidents"
 DEPENDENCIES = ["incidents"]
 DEPENDENCIES_LIMIT = [2, 1]
+
+[handlers]
+
+[handlers.history]
+
+[handlers.sensors]
+
+PATH = "fixmystreet.handlers.history.FixMyStreetHistoryHandler"
+DATA_FORMAT = "geojson"
+DATA_TYPE = "json"
+QUERY_PARAMETERS = { start_timestamp = "int", end_timestamp = "int" }
