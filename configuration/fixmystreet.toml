@@ -7,6 +7,12 @@ DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
 SCHEDULE = "5m"
 
-#[harvesters]
+[harvesters]
 
-#[haversters.history]
+[harvesters.history]
+PATH = "fixmystreet.harvesters.history.FixMyStreetHistoryHarvester"
+DATA_FORMAT = "json"
+DATA_TYPE = "json"
+SOURCE = "fixmystreet.incident"
+DEPENDENCIES = ["incident"]
+DEPENDENCIES_LIMIT = [2, 1]
