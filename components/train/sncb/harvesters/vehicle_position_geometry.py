@@ -42,6 +42,27 @@ class SNCBVehiclePositionGeometryHarvester(Harvester):
 
         stop_times["arrival_delay"] = 0
 
+        # Convertir l'heure en string formatée
+        gtfs_rt["arrival_time"] = pd.to_timedelta(gtfs_rt["arrival_time"], unit="s").astype(str)
+
+        # Type safety
+        gtfs_rt["trip_id"] = gtfs_rt["trip_id"].astype("string")
+        gtfs_rt["stop_id"] = gtfs_rt["stop_id"].astype("string")
+
+        # Merge et priorité aux données en temps réel
+        stop_times = stop_times.merge(
+            gtfs_rt[["trip_id", "stop_id", "arrival_delay", "arrival_time"]],
+            on=["trip_id", "stop_id"],
+            how="left",
+            suffixes=("", "_rt")
+        )
+
+        stop_times["arrival_delay"] = stop_times["arrival_delay_rt"].combine_first(stop_times["arrival_delay"])
+        stop_times["arrival_time"] = stop_times["arrival_time_rt"].combine_first(stop_times["arrival_time"])
+
+        # Nettoyage
+        stop_times.drop(columns=["arrival_delay_rt", "arrival_time_rt"], inplace=True)
+
         stop_times.update(gtfs_rt)
 
         stop_times["next_stop_sequence"] = stop_times["stop_sequence"] + 1
@@ -201,4 +222,4 @@ class SNCBVehiclePositionGeometryHarvester(Harvester):
             ]
         ]
 
-        return json.loads(final.to_json())
+        return json.loads(final.to_json(ensure_ascii=False))
