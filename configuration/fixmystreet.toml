@@ -21,8 +21,6 @@ DEPENDENCIES_LIMIT = [2, 1]
 
 [handlers.history]
 
-[handlers.sensors]
-
 PATH = "fixmystreet.handlers.history.FixMyStreetHistoryHandler"
 DATA_FORMAT = "geojson"
 DATA_TYPE = "json"
