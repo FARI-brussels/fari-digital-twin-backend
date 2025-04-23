@@ -124,7 +124,7 @@ class FileStorageManager(StorageManager):
     def __init__(self, directory):
         self.directory = directory
 
-    def write(self, file_name: str, data: Union[bytes, dict, list]) -> str:
+    def write(self, file_name: str, data: Union[bytes, str]) -> str:
         """
         Write data to a file in the local file system.
 
@@ -135,8 +135,7 @@ class FileStorageManager(StorageManager):
         """
         file_path = os.path.join(self.directory, file_name)
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
-
-        if isinstance(data, (dict, list)):
+        if isinstance(data, str):
             # Handle JSON data
             with open(file_path, "w", encoding="utf-8") as file:
                 json.dump(data, file, indent=2)
