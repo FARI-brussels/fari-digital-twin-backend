@@ -1,7 +1,7 @@
 import hashlib
 import json
 from datetime import datetime
-
+import os
 from sqlalchemy import Table
 
 from src.configuration.model import ComponentConfiguration
@@ -59,10 +59,10 @@ def write_tileset_result(configuration: ComponentConfiguration, table: Table, da
 
     with engine.connect() as connection:
         for file_path, content in folder_json.items():
-            # Skip directory entries (they usually end with '/')
-            if file_path.endswith('/'):
+            # Skip directory entries (they usually end with '/') and ignore hidden/temporary files
+            if file_path.endswith('/') or os.path.basename(file_path).startswith('.'):
                 continue
-            if "tileset" in file_path:
+            if "tileset.json" in file_path:
                 md5_digest = hashlib.md5(content.encode("utf-8")).hexdigest()
                 tileset_url = storage_manager.write(
                 f"{configuration.name}/{date.strftime('%Y-%m-%d_%H-%M-%S')}/{file_path}",
