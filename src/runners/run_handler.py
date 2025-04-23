@@ -51,7 +51,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
     def check_client_address(self):
         host = self.client_address[0]
-        if host not in self.allowed_hosts:
+        if host not in self.allowed_hosts and '*' not in self.allowed_hosts:
             self.log_error(f"FORBIDDEN: {host} not in {self.allowed_hosts}")
             self.send_error(403, "Forbidden")
             return False
