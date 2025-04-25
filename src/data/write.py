@@ -56,7 +56,6 @@ def write_result(
 
 def write_tileset_result(configuration: ComponentConfiguration, table: Table, data, date: datetime):
     folder_json = zip_to_dict(data)
-
     with engine.connect() as connection:
         for file_path, content in folder_json.items():
             # Skip directory entries (they usually end with '/') and ignore hidden/temporary files

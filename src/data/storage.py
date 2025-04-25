@@ -2,7 +2,7 @@ import abc
 import json
 import os
 from typing import Union
-
+from urllib.parse import urlparse
 from azure.storage.blob import BlobServiceClient
 import boto3
 from botocore.client import Config
@@ -73,9 +73,13 @@ class OVHBlobManager(StorageManager):
         formatted_url = f"https://{self.bucket_name}.{endpoint_base}{file_name}"
         return formatted_url
     
-    def read(self, file_name: str) -> bytes:
-        response = self.s3.get_object(Bucket=self.bucket_name, Key=file_name)
+    def read(self, file_url: str) -> bytes:
+        parsed_url = urlparse(file_url)
+        # The key is the path part of the URL, removing any leading slash
+        key = parsed_url.path.lstrip('/')
+        response = self.s3.get_object(Bucket=self.bucket_name, Key=key)
         return response['Body'].read()
+
     
     def delete(self, file_name: str):
         self.s3.delete_object(Bucket=self.bucket_name, Key=file_name)

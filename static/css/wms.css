@@ -1,0 +1,126 @@
+.wms-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.input-group input[type="url"] {
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.input-group input[type="url"]:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+.load-btn {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    align-self: flex-start;
+}
+
+.load-btn:hover {
+    background-color: #2980b9;
+}
+
+.layers-container {
+    margin-top: 30px;
+}
+
+.layers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.layer-item {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.layer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.layer-name {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.layer-description {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.layer-description textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+    min-height: 60px;
+}
+
+.save-btn {
+    background-color: #2ecc71;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    align-self: flex-end;
+}
+
+.save-btn:hover {
+    background-color: #27ae60;
+}
+
+.save-btn:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+.error-message {
+    color: #e74c3c;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+.success-message {
+    color: #2ecc71;
+    margin-top: 5px;
+    font-size: 14px;
+} 

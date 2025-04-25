@@ -1,0 +1,15 @@
+[collectors]
+
+[collectors.wms_layer]
+
+PATH = "wms.collectors.wms.WMSCollector"
+DATA_FORMAT = "wms"
+DATA_TYPE = "json"
+
+
+[handlers]
+[handlers.wms_layer]
+PATH = "wms.handlers.wms.WMSHandler"
+DATA_FORMAT = "wms"
+DATA_TYPE = "json"
+QUERY_PARAMETERS = { start_timestamp = "int", end_timestamp = "int" }

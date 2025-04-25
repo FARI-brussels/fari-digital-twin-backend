@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WMS Layer Upload</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/wms.css">
+</head>
+<body>
+    <h1>WMS Layer Upload</h1>
+    
+    <div class="wms-container">
+        <form id="wms-form">
+            <div class="input-group">
+                <label for="wms-url">WMS Server URL:</label>
+                <input type="url" id="wms-url" name="wms-url" placeholder="https://example.com/wms" required>
+                <button type="submit" class="load-btn">Load Layers</button>
+            </div>
+        </form>
+
+        <div id="layers-container" class="layers-container" style="display: none;">
+            <h2>Available Layers</h2>
+            <div id="layers-list" class="layers-list">
+                <!-- Layers will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="info">
+        <h2>How to Use</h2>
+        <p>1. Enter the URL of your WMS server</p>
+        <p>2. Click "Load Layers" to fetch available layers</p>
+        <p>3. Add descriptions for the layers you want to save</p>
+        <p>4. Click "Send to Database" for each layer you want to process</p>
+    </div>
+
+    <script src="/static/js/wms.js"></script>
+</body>
+</html> 

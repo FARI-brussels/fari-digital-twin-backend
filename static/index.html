@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Modern ZIP File Upload Server</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <h1>Modern ZIP File Upload Server</h1>
+    
+    <form id="upload-form" enctype="multipart/form-data">
+        <div class="upload-container">
+            <div id="drop-zone" class="drop-zone">
+                <div class="drop-zone-prompt">Drag and drop ZIP file here</div>
+                <span>OR</span>
+                <label for="file-upload" class="file-label">Choose ZIP File</label>
+            </div>
+            
+            <input type="file" name="zipfile" id="file-upload" class="file-input" accept=".zip">
+            <div id="file-name" class="file-name">No file selected</div>
+            
+            <button type="submit" class="submit-btn">Upload</button>
+        </div>
+    </form>
+    
+    <div class="info">
+        <h2>How to Access Your File</h2>
+        <p>Once uploaded, your ZIP file will be available at:</p>
+        <p><strong>http://localhost:8887/tileset.zip</strong></p>
+        <p>This URL will always point to your most recently uploaded ZIP file.</p>
+        <p>After upload, the system will automatically detect the content type (BIM or pointcloud) and run the appropriate processing command.</p>
+    </div>
+
+    <div id="success-message" class="success-message" style="display: none;">
+        <h2>Upload Successful!</h2>
+        <div class="file-info">
+            <p><strong>Filename:</strong> <span id="success-filename"></span></p>
+            <p><strong>Content Type:</strong> <span id="success-content-type"></span></p>
+            <p><strong>Processing Command:</strong> <code id="success-command"></code></p>
+        </div>
+        <a href="/" class="back-btn">Upload Another File</a>
+    </div>
+
+    <script src="/static/js/upload.js"></script>
+</body>
+</html> 
